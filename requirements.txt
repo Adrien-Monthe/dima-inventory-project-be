@@ -1,0 +1,16 @@
+# Django & REST Framework
+Django
+djangorestframework
+
+# JWT Authentication
+djangorestframework-simplejwt
+
+# PostgreSQL driver
+psycopg2-binary
+
+# CORS handling (useful when Vue frontend calls backend)
+django-cors-headers
+
+# Environment variables support
+python-decouple
+
