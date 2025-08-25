@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Q, F
 from django.utils import timezone
 from django_softdelete.models import SoftDeleteModel
 
@@ -81,3 +82,47 @@ class Vendor(SoftDeleteModel, models.Model):
 
     def __str__(self):
         return self.name
+
+
+class StockMove(SoftDeleteModel, models.Model):
+    MOVE_TYPES = [
+        ("INBOUND", "Inbound"),
+        ("OUTBOUND", "Outbound"),
+        ("TRANSFER", "Transfer"),
+    ]
+    move_type = models.CharField(max_length=20, choices=MOVE_TYPES)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField()
+    from_location = models.ForeignKey(Location, related_name="outgoing_moves",on_delete=models.SET_NULL, null=True, blank=True)
+    to_location = models.ForeignKey(Location, related_name="incoming_moves",on_delete=models.SET_NULL, null=True, blank=True)
+
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        constraints = [
+            models.CheckConstraint(name="outbound_requires_from",
+                                   check=~Q(move_type="OUTBOUND") | Q(from_location__isnull=False), ),
+            models.CheckConstraint(name="transfer_requires_both", check=~Q(move_type="TRANSFER") | (
+                    Q(from_location__isnull=False) & Q(to_location__isnull=False) & ~Q(
+                from_location=F("to_location"))), ),
+        ]
+
+    def __str__(self):
+        return f"{self.move_type} {self.quantity} {self.product}"
+
+
+class InventorySnapshot(SoftDeleteModel, models.Model):
+    product = models.ForeignKey( Product, on_delete=models.CASCADE,related_name="inventory_snapshots")
+    location = models.ForeignKey(Location,on_delete=models.CASCADE,related_name="inventory_snapshots")
+    quantity = models.PositiveIntegerField(default=0)
+
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ('product', 'location')
+        verbose_name_plural = "Inventory Snapshots"
+
+    def __str__(self):
+        return f"{self.product.name} @ {self.location.code}: {self.quantity}"

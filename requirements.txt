@@ -14,5 +14,9 @@ django-cors-headers
 # Environment variables support
 python-decouple
 
+# Soft delete functionality for Django models
 django-soft-delete
+
+#
+drf-yasg
 
