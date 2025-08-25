@@ -13,6 +13,9 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 import os
 
+from decouple import config, Csv
+from decouple import config, Csv
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -39,6 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'inventory.apps.InventoryConfig',
+    'rest_framework',
+    'rest_framework_simplejwt',
 ]
 
 MIDDLEWARE = [
@@ -78,11 +83,11 @@ WSGI_APPLICATION = 'MSInventory.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DATABASE_NAME', 'dima'),
-        'USER': os.getenv('DATABASE_USER', 'dima'),
-        'PASSWORD': os.getenv('DATABASE_PASSWORD', 'dima'),
-        'HOST': os.getenv('DATABASE_HOST', '127.0.0.1'),
-        'PORT': os.getenv('DATABASE_PORT', '5432'),
+        'HOST': config('DATABASE_HOST', default='localhost'),
+        'USER': config('DATABASE_USER', default='dima'),
+        'PASSWORD': config('DATABASE_PASSWORD', default='dima'),
+        'NAME': config('DATABASE_NAME', default='dima'),
+        'PORT': config('DATABASE_PORT', default='5432'),
     }
 }
 

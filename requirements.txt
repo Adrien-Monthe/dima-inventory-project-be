@@ -14,3 +14,5 @@ django-cors-headers
 # Environment variables support
 python-decouple
 
+django-soft-delete
+
