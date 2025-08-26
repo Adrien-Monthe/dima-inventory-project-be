@@ -1,22 +1,22 @@
 # Django & REST Framework
-Django
-djangorestframework
+Django==5.2.5
+djangorestframework==3.16.1
 
 # JWT Authentication
-djangorestframework-simplejwt
+djangorestframework-simplejwt==5.5.1
 
 # PostgreSQL driver
-psycopg2-binary
+psycopg2-binary==2.9.10
 
 # CORS handling (useful when Vue frontend calls backend)
-django-cors-headers
+django-cors-headers==4.7.0
 
 # Environment variables support
-python-decouple
+python-decouple==3.8
 
 # Soft delete functionality for Django models
-django-soft-delete
+django-soft-delete==1.0.19
 
-#
-drf-yasg
+# Swagger for API documentation
+drf-yasg==1.21.10
 
