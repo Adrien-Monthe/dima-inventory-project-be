@@ -56,6 +56,17 @@ class StockMoveSerializer(serializers.ModelSerializer):
 
 
 class InventorySnapshotSerializer(serializers.ModelSerializer):
+    product_name = serializers.CharField(source="product.name", read_only=True)
+    location_name = serializers.CharField(source="location.name", read_only=True)
+
     class Meta:
         model = InventorySnapshot
-        fields = '__all__'
+        fields = '__all__'  # keep all existing fields
+        extra_fields = ['product_name', 'location_name']
+
+    def get_field_names(self, declared_fields, info):
+        """
+        Override to ensure extra_fields are included even when fields='__all__'
+        """
+        expanded_fields = super().get_field_names(declared_fields, info)
+        return expanded_fields + getattr(self.Meta, 'extra_fields', [])
