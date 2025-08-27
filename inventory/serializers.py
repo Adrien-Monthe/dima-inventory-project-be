@@ -43,9 +43,16 @@ class VendorSerializer(serializers.ModelSerializer):
 
 
 class StockMoveSerializer(serializers.ModelSerializer):
+    from_location_name = serializers.CharField(source='from_location.name', read_only=True)
+    to_location_name = serializers.CharField(source='to_location.name', read_only=True)
+    product_name = serializers.CharField(source='product.name', read_only=True)
+
     class Meta:
         model = StockMove
-        fields = '__all__'
+        fields = [
+            'id', 'move_type', 'product', 'quantity', 'from_location', 'to_location',
+            'from_location_name', 'to_location_name', 'product_name'
+        ]
 
 
 class InventorySnapshotSerializer(serializers.ModelSerializer):
